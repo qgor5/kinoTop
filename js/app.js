@@ -1,49 +1,95 @@
-const TMDB_KEY = '7cb67565ace3a08cd9d099c749787121';
-const YT_KEY = 'AIzaSyB-ho2tJ4r_y8K2Z...'; // замените на свой YouTube API ключ
+const API_KEY = '7cb67565ace3a08cd9d099c749787121';
+const BASE_URL = 'https://api.themoviedb.org/3';
+const IMAGE_BASE_URL = 'https://image.tmdb.org/t/p/w500';
 
-async function fetchMovies(query = 'popular') {
-  const url = `https://api.themoviedb.org/3/movie/${query}?api_key=${TMDB_KEY}&language=ru-RU&page=1`;
-  const res = await fetch(url);
-  const data = await res.json();
-  return data.results;
+let allMovies = [];
+
+async function loadMovies() {
+    const res = await fetch(`${BASE_URL}/movie/popular?api_key=${API_KEY}&language=ru-RU&page=1`);
+    const data = await res.json();
+    allMovies = data.results;
+    displayMovies(allMovies);
+    updateSitemap(allMovies);
 }
 
-async function getTrailer(title) {
-  const url = `https://www.googleapis.com/youtube/v3/search?part=snippet&q=${encodeURIComponent(title + ' трейлер')}&type=video&key=${YT_KEY}&maxResults=1`;
-  const res = await fetch(url);
-  const data = await res.json();
-  return data.items?.[0]?.id?.videoId;
+function displayMovies(movies) {
+    const container = document.getElementById('moviesGrid');
+    container.innerHTML = '';
+    
+    movies.forEach(movie => {
+        const card = document.createElement('div');
+        card.className = 'movie-card';
+        card.onclick = () => goToFilm(movie.id);
+        
+        const genres = movie.genre_ids.map(id => getGenreName(id)).join(', ');
+        
+        card.innerHTML = `
+            <img src="${IMAGE_BASE_URL}${movie.poster_path}" alt="${movie.title}" class="movie-poster">
+            <div class="movie-info">
+                <h3 class="movie-title">${movie.title}</h3>
+                <p class="movie-genre">${genres}</p>
+            </div>
+        `;
+        container.appendChild(card);
+    });
 }
 
-async function renderMovies(movies) {
-  const grid = document.getElementById('movieGrid');
-  grid.innerHTML = '';
-  for (const m of movies) {
-    const trailerId = await getTrailer(m.title);
-    const img = `https://image.tmdb.org/t/p/w500${m.poster_path}`;
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <img src="${img}" alt="${m.title}" />
-      <div class="card-content">
-        <h3>${m.title}</h3>
-        <p>${m.overview.slice(0, 100)}...</p>
-        <a href="https://www.youtube.com/watch?v=${trailerId}" target="_blank">▶ Смотреть трейлер</a>
-      </div>
-    `;
-    grid.appendChild(card);
-  }
+function goToFilm(id) {
+    window.location.href = `film.html?id=${id}`;
 }
 
-async function searchMovies() {
-  const q = document.getElementById('searchInput').value;
-  const url = `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_KEY}&language=ru-RU&query=${q}`;
-  const res = await fetch(url);
-  const data = await res.json();
-  renderMovies(data.results);
+function filterByGenre(genre) {
+    document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+    event.target.classList.add('active');
+    
+    if (genre === 'all') {
+        displayMovies(allMovies);
+    } else {
+        const filtered = allMovies.filter(movie => movie.genre_ids.includes(getGenreId(genre)));
+        displayMovies(filtered);
+    }
 }
 
-window.addEventListener('DOMContentLoaded', async () => {
-  const popular = await fetchMovies('popular');
-  renderMovies(popular);
-});
+function searchMovies() {
+    const query = document.getElementById('searchInput').value;
+    if (query.length > 2) {
+        fetch(`${BASE_URL}/search/movie?api_key=${API_KEY}&language=ru-RU&query=${query}`)
+            .then(res => res.json())
+            .then(data => displayMovies(data.results));
+    }
+}
+
+function getGenreName(id) {
+    const genres = {
+        28: 'Боевик', 12: 'Приключения', 16: 'Анимация', 35: 'Комедия',
+        80: 'Криминал', 99: 'Документальный', 18: 'Драма', 10751: 'Семейный',
+        14: 'Фэнтези', 36: 'История', 27: 'Ужасы', 10402: 'Музыка',
+        9648: 'Мистика', 10749: 'Романтика', 878: 'Фантастика', 53: 'Триллер'
+    };
+    return genres[id] || '';
+}
+
+function getGenreId(name) {
+    const genres = {
+        'action': 28, 'adventure': 12, 'comedy': 35, 'drama': 18,
+        'horror': 27, 'fantasy': 14
+    };
+    return genres[name] || 0;
+}
+
+function updateSitemap(movies) {
+    const urls = movies.map(movie => 
+        `<url><loc>https://yourdomain.com/film.html?id=${movie.id}</loc></url>`
+    ).join('');
+    
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+    <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+        <url><loc>https://yourdomain.com/</loc></url>
+        ${urls}
+    </urlset>`;
+    
+    // Здесь можно сохранить sitemap.xml на сервере
+    console.log('Sitemap updated');
+}
+
+window.addEventListener('DOMContentLoaded', loadMovies);
