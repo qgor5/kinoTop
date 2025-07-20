@@ -1,27 +1,50 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title id="filmTitle">FilmNow - Загрузка...</title>
-    <meta name="description" content="Трейлер, описание, актеры и рецензии">
-    <link rel="stylesheet" href="css/film.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title id="filmTitle">FilmNow - фильм</title>
+  <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <header>
-        <nav>
-            <h1><a href="/">← FilmNow</a></h1>
-        </nav>
-    </header>
+  <header>
+    <h1><a href="/">← FilmNow</a></h1>
+  </header>
 
-    <main id="filmContainer">
-        <!-- Контент загружается динамически -->
-    </main>
+  <main id="filmContainer" class="layout">
+    <!-- JS вставит контент -->
+  </main>
 
-    <footer>
-        <p>&copy; 2024 FilmNow. Все права защищены.</p>
-    </footer>
+  <script>
+    const API_KEY = '7cb67565ace3a08cd9d099c749787121';
+    const IMAGE_URL = 'https://image.tmdb.org/t/p/w300';
+    const BASE_URL = 'https://api.themoviedb.org/3';
 
-    <script src="js/film.js"></script>
+    async function loadFilm() {
+      const id = new URLSearchParams(location.search).get('id');
+      const [film, credits] = await Promise.all([
+        fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=ru-RU`).then(r => r.json()),
+        fetch(`${BASE_URL}/movie/${id}/credits?api_key=${API_KEY}`).then(r => r.json())
+      ]);
+
+      document.title = `${film.title} - FilmNow`;
+
+      document.getElementById('filmContainer').innerHTML = `
+        <div style="display:grid;grid-template-columns:200px 1fr;gap:2rem;max-width:1000px;margin:auto;padding:2rem;">
+          <img src="${IMAGE_URL}${film.poster_path}" style="width:100%;border-radius:12px;">
+          <div>
+            <h1>${film.title}</h1>
+            <p>⭐ ${film.vote_average}</p>
+            <p>📅 ${film.release_date}</p>
+            <p>${film.overview}</p>
+            <iframe width="100%" height="300" src="https://www.youtube.com/embed/${film.title} трейлер" 
+                    frameborder="0" allowfullscreen></iframe>
+          </div>
+        </div>
+      `;
+    }
+
+    loadFilm();
+  </script>
 </body>
 </html>
