@@ -3,34 +3,22 @@ const BASE_URL = 'https://api.themoviedb.org/3';
 const IMAGE_URL = 'https://image.tmdb.org/t/p/w300';
 
 let allMovies = [];
+let currentPage = 1;
+const totalPages = 10; // показываем по 10 страниц
 
 const genreMap = {
   28: 'Боевик', 12: 'Приключения', 16: 'Мультфильм', 35: 'Комедия',
   80: 'Криминал', 99: 'Документальный', 18: 'Драма', 10751: 'Семейный',
-  14: 'Фэнтези', 36: 'История', 27: 'Ужасы', 10749: 'Мелодрама',
-  878: 'Фантастика', 53: 'Триллер'
+  14: 'Фэнтези', 36: 'История', 27: 'Ужасы', 10402: 'Музыка',
+  9648: 'Мистика', 10749: 'Романтика', 878: 'Фантастика', 53: 'Триллер'
 };
 
-async function loadMovies() {
-  const res = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&language=ru-RU&page=1`);
+async function loadMovies(page = 1) {
+  const res = await fetch(`${BASE_URL}/discover/movie?api_key=${API_KEY}&language=ru-RU&sort_by=popularity.desc&page=${page}`);
   const data = await res.json();
   allMovies = data.results;
-  renderGenres();
   displayMovies(allMovies);
-}
-
-function renderGenres() {
-  const list = document.getElementById('genreList');
-  const genres = [...new Set(allMovies.flatMap(m => m.genre_ids))];
-  list.innerHTML = '';
-  ['Все', ...genres.map(id => genreMap[id])].forEach(g => {
-    const li = document.createElement('li');
-    const btn = document.createElement('button');
-    btn.textContent = g;
-    btn.onclick = () => filterByGenre(g);
-    li.appendChild(btn);
-    list.appendChild(li);
-  });
+  renderPagination(data.total_pages);
 }
 
 function displayMovies(movies) {
@@ -48,12 +36,16 @@ function displayMovies(movies) {
   });
 }
 
-function filterByGenre(genre) {
-  document.querySelectorAll('.sidebar button').forEach(b => b.classList.remove('active'));
-  event.target.classList.add('active');
-  if (genre === 'Все') return displayMovies(allMovies);
-  const id = Object.keys(genreMap).find(k => genreMap[k] === genre);
-  displayMovies(allMovies.filter(m => m.genre_ids.includes(+id)));
+function renderPagination(total) {
+  const pag = document.getElementById('pagination');
+  pag.innerHTML = '';
+  for (let i = 1; i <= Math.min(total, 10); i++) {
+    const btn = document.createElement('button');
+    btn.textContent = i;
+    btn.classList.toggle('active', i === currentPage);
+    btn.onclick = () => { currentPage = i; loadMovies(i); };
+    pag.appendChild(btn);
+  }
 }
 
 document.getElementById('searchInput').addEventListener('input', e => {
@@ -61,4 +53,4 @@ document.getElementById('searchInput').addEventListener('input', e => {
   displayMovies(allMovies.filter(m => m.title.toLowerCase().includes(q)));
 });
 
-window.addEventListener('DOMContentLoaded', loadMovies);
+window.addEventListener('DOMContentLoaded', () => loadMovies());
