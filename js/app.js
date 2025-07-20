@@ -8,28 +8,8 @@ let currentYear = '';
 
 const genreMap = {
   28: 'Боевик', 12: 'Приключения', 16: 'Мультфильм', 35: 'Комедия',
-  80: 'Криминал', 99: 'Документальный', 18: 'Драма', 10751: 'Семейный',
-  14: 'Фэнтези', 36: 'История', 27: 'Ужасы', 10749: 'Мелодрама',
-  878: 'Фантастика', 53: 'Триллер', 10402: 'Музыка', 9648: 'Мистика'
+  80: 'Криминал', 18: 'Драма', 14: 'Фэнтези', 27: 'Ужасы', 878: 'Фантастика'
 };
-
-async function loadGenres() {
-  const res = await fetch(`${BASE_URL}/genre/movie/list?api_key=${API_KEY}&language=ru-RU`);
-  const data = await res.json();
-  const genreList = document.getElementById('genreList');
-  genreList.innerHTML = `<li><button class="active" onclick="setGenre('')">Все</button></li>`;
-  data.genres.forEach(g => {
-    genreList.innerHTML += `<li><button onclick="setGenre(${g.id})">${g.name}</button></li>`;
-  });
-}
-
-function renderYears() {
-  const yearList = document.getElementById('yearList');
-  yearList.innerHTML = `<li><button class="active" onclick="setYear('')">Все</button></li>`;
-  for (let y = 2025; y >= 1980; y--) {
-    yearList.innerHTML += `<li><button onclick="setYear(${y})">${y}</button></li>`;
-  }
-}
 
 async function loadMovies(page = 1) {
   let url = `${BASE_URL}/discover/movie?api_key=${API_KEY}&language=ru-RU&page=${page}`;
@@ -48,12 +28,23 @@ function displayMovies(movies) {
     const div = document.createElement('div');
     div.className = 'movie-card';
     div.onclick = () => location.href = `film.html?id=${m.id}`;
-    div.innerHTML = `
-      <img src="${IMAGE_URL}${m.poster_path}" class="movie-poster" alt="${m.title}">
-      <div class="movie-title">${m.title}</div>
-    `;
+    div.innerHTML = `<img src="${IMAGE_URL}${m.poster_path}" class="movie-poster" alt="${m.title}"><div class="movie-title">${m.title}</div>`;
     grid.appendChild(div);
   });
+}
+
+function renderPagination(page, total) {
+  const pag = document.getElementById('pagination');
+  pag.innerHTML = '';
+  const start = Math.max(1, page - 3);
+  const end = Math.min(total, page + 3);
+  for (let i = start; i <= end; i++) {
+    const btn = document.createElement('button');
+    btn.textContent = i;
+    btn.classList.toggle('active', i === page);
+    btn.onclick = () => { currentPage = i; loadMovies(i); };
+    pag.appendChild(btn);
+  }
 }
 
 function setGenre(id) {
@@ -72,17 +63,18 @@ function setYear(year) {
   event.target.classList.add('active');
 }
 
-function renderPagination(page, total) {
-  const pag = document.getElementById('pagination');
-  pag.innerHTML = '';
-  const start = Math.max(1, page - 3);
-  const end = Math.min(total, page + 3);
-  for (let i = start; i <= end; i++) {
-    const btn = document.createElement('button');
-    btn.textContent = i;
-    btn.classList.toggle('active', i === page);
-    btn.onclick = () => { currentPage = i; loadMovies(i); };
-    pag.appendChild(btn);
+function renderFilters() {
+  // Жанры
+  const genreList = document.getElementById('genreList');
+  genreList.innerHTML = `<li><button class="active" onclick="setGenre('')">Все</button></li>`;
+  Object.entries(genreMap).forEach(([id, name]) => {
+    genreList.innerHTML += `<li><button onclick="setGenre(${id})">${name}</button></li>`;
+  });
+  // Годы
+  const yearList = document.getElementById('yearList');
+  yearList.innerHTML = `<li><button class="active" onclick="setYear('')">Все</button></li>`;
+  for (let y = 2025; y >= 1980; y--) {
+    yearList.innerHTML += `<li><button onclick="setYear(${y})">${y}</button></li>`;
   }
 }
 
@@ -94,7 +86,6 @@ document.getElementById('searchInput').addEventListener('input', e => {
 });
 
 window.addEventListener('DOMContentLoaded', () => {
-  loadGenres();
-  renderYears();
+  renderFilters();
   loadMovies();
 });
