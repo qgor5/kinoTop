@@ -8,61 +8,28 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
 
-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background: var(--card);
-}
-
+header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: var(--card); }
 header h1 a { color: var(--accent); text-decoration: none; }
 header input { padding: .5rem 1rem; border-radius: 20px; border: none; }
 
-.layout {
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 2rem;
-  max-width: 1200px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-}
-
-.sidebar {
-  background: var(--card);
-  border-radius: 12px;
-  padding: 1rem;
-  height: fit-content;
-  position: sticky;
-  top: 100px;
-}
-
+.layout { display: grid; grid-template-columns: 220px 1fr; gap: 2rem; max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
+.sidebar { background: var(--card); border-radius: 12px; padding: 1rem; position: sticky; top: 100px; }
 .sidebar ul { list-style: none; }
 .sidebar button {
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  color: var(--text);
-  cursor: pointer;
-  padding: .4rem 0;
-  transition: color .2s;
+  width: 100%; text-align: left; background: none; border: none;
+  color: var(--text); cursor: pointer; padding: .4rem 0; transition: color .2s;
 }
 .sidebar button:hover,
 .sidebar button.active { color: var(--accent); }
 
 .movies-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
   gap: 1rem;
 }
-
 .movie-card {
-  background: var(--card);
-  border-radius: 12px;
-  overflow: hidden;
-  cursor: pointer;
-  transition: transform .2s;
+  background: var(--card); border-radius: 8px; overflow: hidden;
+  cursor: pointer; transition: transform .2s;
 }
 .movie-card:hover { transform: scale(1.05); }
 
@@ -78,63 +45,15 @@ header input { padding: .5rem 1rem; border-radius: 20px; border: none; }
 }
 
 .pagination {
-  display: flex;
-  gap: .5rem;
-  justify-content: center;
-  margin-top: 2rem;
+  display: flex; gap: .5rem; justify-content: center; margin-top: 2rem;
 }
 .pagination button {
-  padding: .5rem 1rem;
-  border: none;
-  background: var(--accent);
-  color: #fff;
-  border-radius: 20px;
-  cursor: pointer;
+  padding: .5rem 1rem; background: var(--accent); color: #fff;
+  border: none; border-radius: 20px; cursor: pointer;
 }
-
-/* --- film.html --- */
-.film-layout {
-  max-width: 1000px;
-  margin: 2rem auto;
-  padding: 0 1rem;
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  gap: 2rem;
-}
-
-.film-poster-big {
-  width: 100%;
-  border-radius: 12px;
-}
-
-.film-info h1 { font-size: 2rem; margin-bottom: .5rem; }
-.film-meta { display: flex; gap: 1rem; margin-bottom: 1rem; color: #aaa; }
-.film-overview { line-height: 1.6; margin-bottom: 1.5rem; }
-
-.trailer-frame {
-  width: 100%;
-  aspect-ratio: 16/9;
-  border-radius: 12px;
-  border: none;
-}
-
-.cast-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 1rem;
-  margin-top: 1rem;
-}
-.cast-item img {
-  width: 100%;
-  border-radius: 50%;
-}
-.cast-item p {
-  font-size: .7rem;
-  text-align: center;
-  margin-top: .3rem;
-}
+.pagination button.active { background: #fff; color: var(--accent); }
 
 @media (max-width: 768px) {
-  .layout, .film-layout { grid-template-columns: 1fr; }
+  .layout { grid-template-columns: 1fr; }
   .sidebar { order: 2; position: static; }
 }
