@@ -6,54 +6,89 @@
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
-body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+body { font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; }
 
-header { display: flex; justify-content: space-between; align-items: center; padding: 1rem 2rem; background: var(--card); }
-header h1 a { color: var(--accent); text-decoration: none; }
-header input { padding: .5rem 1rem; border-radius: 20px; border: none; }
+header { display: flex; align-items: center; padding: 1rem 2rem; background: var(--card); }
+header h1 a { color: var(--accent); text-decoration: none; font-size: 1.4rem; }
 
-.layout { display: grid; grid-template-columns: 220px 1fr; gap: 2rem; max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
-.sidebar { background: var(--card); border-radius: 12px; padding: 1rem; position: sticky; top: 100px; }
-.sidebar ul { list-style: none; }
-.sidebar button {
-  width: 100%; text-align: left; background: none; border: none;
-  color: var(--text); cursor: pointer; padding: .4rem 0; transition: color .2s;
-}
-.sidebar button:hover,
-.sidebar button.active { color: var(--accent); }
-
-.movies-grid {
+/* ---------- КАРТОЧКА ФИЛЬМА ---------- */
+.film-card {
+  max-width: 1000px;
+  margin: 1rem auto;
+  padding: 0 1rem;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-  gap: 1rem;
+  grid-template-columns: 220px 1fr;
+  gap: 1.5rem;
 }
-.movie-card {
-  background: var(--card); border-radius: 8px; overflow: hidden;
-  cursor: pointer; transition: transform .2s;
-}
-.movie-card:hover { transform: scale(1.05); }
 
-.movie-poster {
+.film-poster {
   width: 100%;
-  aspect-ratio: 2 / 3;
-  object-fit: cover;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,.4);
 }
-.movie-title {
-  font-size: .8rem;
-  padding: .5rem .4rem;
+
+/* ---------- БЛОК ИНФО ---------- */
+.film-info h1 { font-size: 1.8rem; margin-bottom: .4rem; }
+.film-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .75rem;
+  font-size: .9rem;
+  color: #aaa;
+  margin-bottom: .5rem;
+}
+.film-overview { font-size: .95rem; margin-bottom: 1rem; line-height: 1.5; }
+
+/* ---------- ТРЕЙЛЕР ---------- */
+.trailer-frame {
+  width: 100%;
+  max-width: 700px;
+  aspect-ratio: 16 / 9;
+  border-radius: 8px;
+  border: none;
+  margin-bottom: 1rem;
+}
+
+/* ---------- АКТЁРЫ ---------- */
+.cast-row {
+  display: flex;
+  gap: .5rem;
+  overflow-x: auto;
+  padding-bottom: .5rem;
+}
+.cast-item {
+  flex: 0 0 80px;
   text-align: center;
 }
+.cast-item img {
+  width: 100%;
+  border-radius: 50%;
+}
+.cast-item p {
+  font-size: .7rem;
+  margin-top: .2rem;
+}
 
-.pagination {
-  display: flex; gap: .5rem; justify-content: center; margin-top: 2rem;
+/* ---------- ПОХОЖИЕ ---------- */
+.similar-row {
+  display: flex;
+  gap: .5rem;
+  overflow-x: auto;
 }
-.pagination button {
-  padding: .5rem 1rem; background: var(--accent); color: #fff;
-  border: none; border-radius: 20px; cursor: pointer;
+.similar-item {
+  flex: 0 0 110px;
+  cursor: pointer;
 }
-.pagination button.active { background: #fff; color: var(--accent); }
+.similar-item img {
+  width: 100%;
+  border-radius: 6px;
+}
+.similar-item p {
+  font-size: .7rem;
+  text-align: center;
+  margin-top: .2rem;
+}
 
 @media (max-width: 768px) {
-  .layout { grid-template-columns: 1fr; }
-  .sidebar { order: 2; position: static; }
+  .film-card { grid-template-columns: 1fr; }
 }
