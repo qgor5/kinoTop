@@ -3,28 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>FilmNow Pro — трейлеры фильмов</title>
+  <title>FilmNow Pro — официальные трейлеры фильмов на русском</title>
+  <meta name="description" content="Свежие русские трейлеры, актёры, даты, описания. Жмите и смотрите.">
   <link rel="stylesheet" href="css/style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 <body>
   <header>
     <h1><a href="/">FilmNow Pro</a></h1>
-    <input id="searchInput" placeholder="Название фильма...">
+    <input id="searchInput" placeholder="Название фильма…">
   </header>
 
   <main class="layout">
+    <!-- Боковая панель: жанры + годы -->
     <aside class="sidebar">
-      <h3>Жанры</h3>
-      <ul id="genreList"></ul>
-      <h3>Годы</h3>
-      <ul id="yearList"></ul>
+      <section>
+        <h3>Жанры</h3>
+        <ul id="genreList"></ul>
+      </section>
+      <section>
+        <h3>Годы</h3>
+        <ul id="yearList"></ul>
+      </section>
     </aside>
 
+    <!-- Фильмы -->
     <section class="content">
       <div id="moviesGrid" class="movies-grid"></div>
       <div id="pagination" class="pagination"></div>
     </section>
   </main>
+
+  <footer>
+    <p>© 2024 FilmNow Pro — только официальные трейлеры на русском языке</p>
+  </footer>
 
   <script src="js/app.js"></script>
 </body>
