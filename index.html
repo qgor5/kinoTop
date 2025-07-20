@@ -1,38 +1,48 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>FilmNow — смотри трейлеры фильмов онлайн</title>
-  <meta name="description" content="Самые свежие трейлеры фильмов, рейтинги, актёры и описания. Обновляется ежедневно.">
-  <link rel="stylesheet" href="css/style.css" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FilmNow - Все фильмы и сериалы</title>
+    <meta name="description" content="Смотрите трейлеры, читайте описания и актеров всех фильмов. Обновляется ежедневно.">
+    <link rel="stylesheet" href="css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
-  <header>
-    <h1>FilmNow</h1>
-    <nav>
-      <a href="#popular">Популярные</a>
-      <a href="#new">Новинки</a>
-      <a href="#search">Поиск</a>
-    </nav>
-  </header>
+    <header>
+        <nav>
+            <h1><a href="/">FilmNow</a></h1>
+            <div class="search-container">
+                <input type="text" id="searchInput" placeholder="Поиск фильмов...">
+                <button onclick="searchMovies()">🔍</button>
+            </div>
+        </nav>
+    </header>
 
-  <main>
-    <section id="search" class="section">
-      <input type="text" id="searchInput" placeholder="Введите название фильма..." />
-      <button onclick="searchMovies()">Найти</button>
-    </section>
+    <main>
+        <section class="genres">
+            <h2>Жанры</h2>
+            <div class="genre-tabs">
+                <button class="tab active" onclick="filterByGenre('all')">Все</button>
+                <button class="tab" onclick="filterByGenre('action')">Боевики</button>
+                <button class="tab" onclick="filterByGenre('comedy')">Комедии</button>
+                <button class="tab" onclick="filterByGenre('drama')">Драмы</button>
+                <button class="tab" onclick="filterByGenre('horror')">Ужасы</button>
+                <button class="tab" onclick="filterByGenre('fantasy')">Фэнтези</button>
+            </div>
+        </section>
 
-    <section id="movies" class="section">
-      <div id="movieGrid" class="grid"></div>
-    </section>
-  </main>
+        <section class="movies">
+            <div id="moviesGrid" class="movies-grid">
+                <!-- Фильмы будут загружены динамически -->
+            </div>
+        </section>
+    </main>
 
-  <footer>
-    <p>&copy; 2024 FilmNow — все трейлеры в одном месте.</p>
-  </footer>
+    <footer>
+        <p>&copy; 2024 FilmNow. Все фильмы в одном месте.</p>
+    </footer>
 
-  <script src="js/app.js"></script>
+    <script src="js/app.js"></script>
 </body>
 </html>
