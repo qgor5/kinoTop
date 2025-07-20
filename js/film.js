@@ -27,13 +27,13 @@ async function loadFilm() {
         <p class="film-overview">${film.overview}</p>
 
         ${trailerId ? `
-          <h3>Официальный русский трейлер</h3>
+          <h3>Русский трейлер</h3>
           <iframe class="trailer-frame" src="https://www.youtube.com/embed/${trailerId}" allowfullscreen></iframe>
         ` : ''}
 
         <h3>Актёры</h3>
         <div class="cast-row">
-          ${credits.cast.slice(0, 10).map(c => `
+          ${credits.cast.slice(0, 12).map(c => `
             <div class="cast-item">
               <img src="${IMAGE_URL}${c.profile_path}" alt="${c.name}">
               <p>${c.name}</p>
